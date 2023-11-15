@@ -1,0 +1,32 @@
+import io
+from PIL import Image
+
+# Define the prompt for DALL-E
+prompt = "A colorful sunset over the ocean with a silhouette of a palm tree."
+
+# Request DALL-E to generate the image
+dalle_response = dalle.text2im({
+    "size": "1024x1024",
+    "prompt": prompt
+})
+
+# Check if the response contains an image
+if dalle_response and dalle_response.images:
+    # Get the first image from the response
+    image_data = dalle_response.images[0]
+
+    # Load the image into a PIL Image object
+    image = Image.open(io.BytesIO(image_data))
+
+    # Convert the image to grayscale
+    grayscale_image = image.convert("L")
+
+    # Resize the image to half its original size
+    resized_image = grayscale_image.resize((512, 512))
+
+    # Save the modified image to a file
+    resized_image.save("/mnt/data/modified_image.jpg")
+
+    print("Image has been modified and saved.")
+else:
+    print("No image was generated.")
